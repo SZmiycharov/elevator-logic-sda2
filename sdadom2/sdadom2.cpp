@@ -19,11 +19,24 @@
 #include <sstream>
 #include <assert.h>
 #include <stdlib.h>
+#include "PriorityQueue.h"
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {
+	PriorityQueue<int> x;
+	x.Enqueue(2, 155);
+	x.Enqueue(3, 21);
+	x.Enqueue(4, 1);
+	x.Enqueue(5, 1);
+	x.Enqueue(6, 1);
+
+	cout << x.Dequeue() << endl;
+
+	system("pause");
+	return 0;
+
 	if (argc != 2)
 	{
 		cerr << "Usage: " << argv[0] << " <FILENAME>" << "\n";
