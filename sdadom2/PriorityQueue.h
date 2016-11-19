@@ -7,7 +7,7 @@
 *
 * @author Stanislav Zmiycharov
 * @idnumber 61883
-* @task 1
+* @task 2
 * @compiler VC
 *
 */
@@ -95,7 +95,7 @@ void PriorityQueue<T>::Enqueue(T const& Element, int priority)
 	}
 	else if (!(front->pNext))
 	{
-		if (priority > front->priority)
+		if (priority < front->priority)
 		{
 			front = p;
 			front->pNext = back;
@@ -121,8 +121,9 @@ void PriorityQueue<T>::Enqueue(T const& Element, int priority)
 			{
 				back->pNext = p;
 				back = p;
+				break;
 			}
-			else if (front->pNext->priority < priority)
+			else if (priority < front->pNext->priority)
 			{
 				p->pNext = front->pNext;
 				front->pNext = p;

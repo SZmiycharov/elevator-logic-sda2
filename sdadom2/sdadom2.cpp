@@ -29,10 +29,13 @@ int main(int argc, char* argv[])
 	x.Enqueue(2, 155);
 	x.Enqueue(3, 21);
 	x.Enqueue(4, 1);
-	x.Enqueue(5, 1);
+	x.Enqueue(5, 5);
 	x.Enqueue(6, 1);
 
-	cout << x.Dequeue() << endl;
+	while (!x.isEmpty())
+	{
+		cout << x.Dequeue() << endl;
+	}
 
 	system("pause");
 	return 0;
