@@ -43,10 +43,11 @@ private:
 		Container(T Value, int priority = -1, Container* pNext = NULL);
 	};
 	Container *front, *back;
+	int Used;
 };
 
 template <typename T>
-PriorityQueue<T>::Container::Container(T Value, int priority, Container* pNext)
+PriorityQueue<T>::Container::Container(T Value, int priority = -1, Container* pNext = NULL)
 {
 	this->Value = Value;
 	this->priority = priority;
@@ -91,14 +92,12 @@ void PriorityQueue<T>::Enqueue(T const& Element, int priority = -1)
 
 	if (isEmpty()) 
 	{  
-		cout << "haha\n";
 		front = p;
 		back = p;
 		insertElementAtBack = false;
 	}
 	else if (!(front->pNext))
 	{
-		cout << "brooo\n";
 		if (priority < front->priority)
 		{
 			front = p;
@@ -113,7 +112,6 @@ void PriorityQueue<T>::Enqueue(T const& Element, int priority = -1)
 	}
 	else if (priority < front->priority)
 	{
-		cout << "nyaaa\n";
 		p->pNext = front;
 		front = p;
 		insertElementAtBack = false;
@@ -126,7 +124,6 @@ void PriorityQueue<T>::Enqueue(T const& Element, int priority = -1)
 		{
 			if (priority == front->priority)
 			{
-				cout << "1\n";
 				while (front->pNext)
 				{
 					if (priority < front->pNext->priority)
@@ -140,7 +137,6 @@ void PriorityQueue<T>::Enqueue(T const& Element, int priority = -1)
 			}
 			else if (priority < front->pNext->priority)
 			{
-				cout << "2\n";
 				insertElementAtBack = false;
 				p->pNext = front->pNext;
 				front->pNext = p;
@@ -152,13 +148,8 @@ void PriorityQueue<T>::Enqueue(T const& Element, int priority = -1)
 
 		if (insertElementAtBack)
 		{
-			cout << "3\n";
 			back->pNext = p;
 			back = p;
-		}
-		else
-		{
-			cout << "4\n";
 		}
 
 		front = oldFront;
@@ -168,6 +159,7 @@ void PriorityQueue<T>::Enqueue(T const& Element, int priority = -1)
 
 	p = NULL;
 	delete p;
+	++Used;
 }
 
 template <typename T>
@@ -185,6 +177,8 @@ T PriorityQueue<T>::Dequeue()
 		
 	T Element = p->Value;
 	delete p;
+	--Used;
+
 	return Element;
 }
 
@@ -207,6 +201,7 @@ void PriorityQueue<T>::Init()
 {
 	front = NULL;
 	back = NULL;
+	Used = 0;
 }
 
 template <typename T>
@@ -221,8 +216,22 @@ void PriorityQueue<T>::RemoveAll()
 template <typename T>
 void PriorityQueue<T>::CopyFrom(PriorityQueue<T> const& obj)
 {
-	for (Container* p = obj.front; p != NULL; p = p->pNext)
+	if (obj.Used == 0) return;
+
+	try
 	{
-		Enqueue(p->Value);
+		Container* p = obj.front;
+
+		while (obj.front)
+		{
+			Enqueue(p->Value);
+			p = p->pNext;
+		}
+	}
+	catch (const bad_alloc& err)
+	{
+		RemoveAll();
+		cerr << "Exception caught: " << err.what() << '\n';
+		exit(EXIT_FAILURE);
 	}
 }

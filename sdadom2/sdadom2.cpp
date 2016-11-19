@@ -23,6 +23,11 @@
 
 using namespace std;
 
+int findTameTakenBetweenFloors(int lastFloor, int currentFloor, int delay)
+{
+	return(abs(currentFloor - lastFloor)*5 + delay);
+}
+
 void emptyStringArray(string(&arr)[4], int length)
 {
 	for (int i = 0; i < length; i++)
@@ -47,6 +52,7 @@ void splitStringToArray(const string &s, char delimeter, string (&elems)[4]) {
 int main(int argc, char* argv[])
 {
 	PriorityQueue<string> elevatorCourse;
+	string directions[2] = { "up", "down" };
 
 	if (argc != 2)
 	{
@@ -87,9 +93,51 @@ int main(int argc, char* argv[])
 		exit(EXIT_FAILURE);
 	}
 
+	string lastStop;
+	string currentStop;
+	int lastStopFloor = 0;
+	int currentStopFloor;
+	string currentCommandElements[] = { "", "", "", "" };
+	int timeTakenBetweenFloors = 0;
+	int delay = 0;
+	int currentStopTime;
+	int lastStopTime = 0;
+
 	while (!elevatorCourse.isEmpty())
 	{
-		cout << elevatorCourse.Dequeue() << endl;
+		string currentStop = elevatorCourse.Dequeue();
+		splitStringToArray(currentStop, ' ', currentCommandElements);
+
+		if (currentCommandElements[1] != directions[0] && currentCommandElements[1] != directions[1])
+		{
+			assert(istringstream(currentCommandElements[1]) >> currentStopFloor);
+			assert(istringstream(currentCommandElements[2]) >> currentStopTime);
+		}
+		else
+		{
+			assert(istringstream(currentCommandElements[2]) >> currentStopFloor);
+			assert(istringstream(currentCommandElements[3]) >> currentStopTime);
+		}
+
+		timeTakenBetweenFloors = findTameTakenBetweenFloors(lastStopFloor, currentStopFloor, currentStopTime-lastStopTime);
+
+		string currentOutput = to_string(timeTakenBetweenFloors) + " " + to_string(currentStopFloor);
+
+		if (currentStopFloor > lastStopFloor)
+		{
+			currentOutput += " ";
+			currentOutput += directions[0];
+		}
+		else
+		{
+			currentOutput += " ";
+			currentOutput += directions[1];
+		}
+		cout << currentOutput << endl;
+
+		lastStop = currentStop;
+		lastStopFloor = currentStopFloor;
+		lastStopTime = currentStopTime;
 	}
 
 	return 0;
