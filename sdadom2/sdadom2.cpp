@@ -1,5 +1,16 @@
-// sdadom2.cpp : Defines the entry point for the console application.
-//
+/**
+*
+* Solution to homework task
+* Data Structures Course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2016/2017
+*
+* @author Stanislav Zmiycharov
+* @idnumber 61883
+* @task 2
+* @compiler VC
+*
+*/
 
 #include "stdafx.h"
 #include <iostream>
