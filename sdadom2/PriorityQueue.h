@@ -24,7 +24,7 @@ public:
 	PriorityQueue(PriorityQueue const& obj);
 	PriorityQueue& operator=(PriorityQueue const& obj);
 
-	void Enqueue(T const& Element, int priority);
+	void Enqueue(T const& Element, int priority = -1);
 	T Dequeue();
 	T Head() const;
 	bool isEmpty() const;
@@ -84,17 +84,19 @@ PriorityQueue<T>& PriorityQueue<T>::operator=(PriorityQueue const& obj)
 }
 
 template <typename T>
-void PriorityQueue<T>::Enqueue(T const& Element, int priority)
+void PriorityQueue<T>::Enqueue(T const& Element, int priority = -1)
 {
 	Container* p = new Container(Element, priority);
 
 	if (isEmpty()) 
-	{
+	{  
+		cout << "haha\n";
 		front = p;
 		back = p;
 	}
 	else if (!(front->pNext))
 	{
+		cout << "brooo\n";
 		if (priority < front->priority)
 		{
 			front = p;
@@ -108,25 +110,50 @@ void PriorityQueue<T>::Enqueue(T const& Element, int priority)
 	}
 	else if (priority < front->priority)
 	{
+		cout << "nyaaa\n";
 		p->pNext = front;
 		front = p;
 	}
 	else
 	{
 		Container* oldFront = front;
-		
+		bool insertElementAtBack = true;
+
 		while (front->pNext)
 		{
-			if (front == back)
+			if (priority == front->priority)
 			{
+				cout << "1\n";
+				while (front->pNext)
+				{
+					if (priority < front->pNext->priority)
+					{
+						p->pNext = front->pNext;
+						front->pNext = p;
+						insertElementAtBack = false;
+						break;
+					}
+				}
+			}
+			else if (priority < front->pNext->priority)
+			{
+				cout << "2\n";
+				insertElementAtBack = false;
+				p->pNext = front->pNext;
+				front->pNext = p;
+				break;
+			}
+
+			if (insertElementAtBack)
+			{
+				cout << "3\n";
 				back->pNext = p;
 				back = p;
 				break;
 			}
-			else if (priority < front->pNext->priority)
+			else
 			{
-				p->pNext = front->pNext;
-				front->pNext = p;
+				cout << "4\n";
 				break;
 			}
 
