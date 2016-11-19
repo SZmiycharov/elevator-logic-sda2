@@ -87,12 +87,14 @@ template <typename T>
 void PriorityQueue<T>::Enqueue(T const& Element, int priority = -1)
 {
 	Container* p = new Container(Element, priority);
+	bool insertElementAtBack = true;
 
 	if (isEmpty()) 
 	{  
 		cout << "haha\n";
 		front = p;
 		back = p;
+		insertElementAtBack = false;
 	}
 	else if (!(front->pNext))
 	{
@@ -107,17 +109,18 @@ void PriorityQueue<T>::Enqueue(T const& Element, int priority = -1)
 			front->pNext = p;
 			back = p;
 		}
+		insertElementAtBack = false;
 	}
 	else if (priority < front->priority)
 	{
 		cout << "nyaaa\n";
 		p->pNext = front;
 		front = p;
+		insertElementAtBack = false;
 	}
 	else
 	{
 		Container* oldFront = front;
-		bool insertElementAtBack = true;
 
 		while (front->pNext)
 		{
@@ -144,20 +147,18 @@ void PriorityQueue<T>::Enqueue(T const& Element, int priority = -1)
 				break;
 			}
 
-			if (insertElementAtBack)
-			{
-				cout << "3\n";
-				back->pNext = p;
-				back = p;
-				break;
-			}
-			else
-			{
-				cout << "4\n";
-				break;
-			}
-
 			front = front->pNext;
+		}
+
+		if (insertElementAtBack)
+		{
+			cout << "3\n";
+			back->pNext = p;
+			back = p;
+		}
+		else
+		{
+			cout << "4\n";
 		}
 
 		front = oldFront;

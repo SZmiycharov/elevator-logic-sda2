@@ -46,22 +46,6 @@ void splitStringToArray(const string &s, char delimeter, string (&elems)[4]) {
 
 int main(int argc, char* argv[])
 {
-	PriorityQueue<int> x;
-	x.Enqueue(4,1);
-	x.Enqueue(3,1);
-	x.Enqueue(1,10);
-	x.Enqueue(8,6);
-	x.Enqueue(4,2);
-	x.Enqueue(6,3);
-
-	while (!x.isEmpty())
-	{
-		cout << "cur element: " << x.Dequeue() << endl;
-	}
-
-	system("pause");
-	return 0;
-
 	PriorityQueue<string> elevatorCourse;
 
 	if (argc != 2)
