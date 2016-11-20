@@ -90,12 +90,14 @@ void PriorityQueue<T>::Enqueue(T const& Element, int priority = -1)
 	Container* p = new Container(Element, priority);
 	bool insertElementAtBack = true;
 
+	//Used == 0
 	if (isEmpty()) 
 	{  
 		front = p;
 		back = p;
 		insertElementAtBack = false;
 	}
+	//Used == 1
 	else if (!(front->pNext))
 	{
 		if (priority < front->priority)
@@ -110,32 +112,21 @@ void PriorityQueue<T>::Enqueue(T const& Element, int priority = -1)
 		}
 		insertElementAtBack = false;
 	}
+	//insert at front
 	else if (priority < front->priority)
 	{
 		p->pNext = front;
 		front = p;
 		insertElementAtBack = false;
 	}
+	//Used > 1; don't insert at front
 	else
 	{
 		Container* oldFront = front;
 
 		while (front->pNext)
 		{
-			if (priority == front->priority)
-			{
-				while (front->pNext)
-				{
-					if (priority < front->pNext->priority)
-					{
-						p->pNext = front->pNext;
-						front->pNext = p;
-						insertElementAtBack = false;
-						break;
-					}
-				}
-			}
-			else if (priority < front->pNext->priority)
+			if (priority < front->pNext->priority)
 			{
 				insertElementAtBack = false;
 				p->pNext = front->pNext;
@@ -160,6 +151,7 @@ void PriorityQueue<T>::Enqueue(T const& Element, int priority = -1)
 	p = NULL;
 	delete p;
 	++Used;
+	cout << Used << " ";
 }
 
 template <typename T>

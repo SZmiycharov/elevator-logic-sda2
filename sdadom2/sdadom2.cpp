@@ -51,8 +51,24 @@ void splitStringToArray(const string &s, char delimeter, string (&elems)[4]) {
 
 int main(int argc, char* argv[])
 {
-	ElevatorSequenceQueue elevatorCourse;
+	PriorityQueue<string> elevatorCourse;
 
+	elevatorCourse.Enqueue("a");
+	elevatorCourse.Enqueue("a");
+	elevatorCourse.Enqueue("a");
+	elevatorCourse.Enqueue("a");
+	elevatorCourse.Enqueue("a");
+	elevatorCourse.Enqueue("a");
+	elevatorCourse.Enqueue("a");
+	elevatorCourse.Enqueue("a");
+	elevatorCourse.Enqueue("a");
+
+
+	system("pause");
+	return 0;
+
+
+	ElevatorSequenceQueue test;
 
 	string directions[2] = { "up", "down" };
 
@@ -135,6 +151,20 @@ int main(int argc, char* argv[])
 			currentOutput += " ";
 			currentOutput += directions[1];
 		}
+
+		//elevatorCourse.findElementBetweenFloorsAndTime(test, currentStopFloor, currentStopTime, lastStopFloor);
+		cout << "here";
+		return 0;
+		while (!test.isEmpty())
+		{
+			cout << "HERE: " << test.Dequeue() << endl;
+		}
+
+		system("pause");
+		return 0;
+
+
+
 		cout << currentOutput << endl;
 
 		lastStop = currentStop;

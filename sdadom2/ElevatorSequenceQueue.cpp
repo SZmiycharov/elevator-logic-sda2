@@ -22,6 +22,8 @@
 #include <sstream>
 #include "ElevatorSequenceQueue.h"
 
+using namespace std;
+
 void ElevatorSequenceQueue::splitStringToArray(const std::string &s, char delimeter, std::string(&elems)[4])
 {
 	std::stringstream ss;
@@ -33,5 +35,16 @@ void ElevatorSequenceQueue::splitStringToArray(const std::string &s, char delime
 	while (getline(ss, item, delimeter)) {
 		elems[i] = item;
 		i++;
+	}
+}
+
+void ElevatorSequenceQueue::findElementBetweenFloorsAndTime(ElevatorSequenceQueue & obj, int beginFloor, int endFloor, int time)
+{
+	obj.Enqueue("x", 1);
+	obj.Enqueue("x", 1);
+	while (!isEmpty())
+	{
+		
+		cout << Dequeue() << endl;
 	}
 }

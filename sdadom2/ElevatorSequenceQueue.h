@@ -23,12 +23,14 @@
 
 class ElevatorSequenceQueue : public PriorityQueue<std::string>
 {
-private:
-	int floor;
-	int time;
 public:
 	ElevatorSequenceQueue() : PriorityQueue() { }
+	void findElementBetweenFloorsAndTime(ElevatorSequenceQueue & obj, int beginFloor, int endFloor, int time);
+
+private:
 	void splitStringToArray(const std::string &s, char delimeter, std::string(&elems)[4]);
-	std::string findElementBetweenFloorsAndTime();
+	
+	int floor;
+	int time;
 };
 
