@@ -12,7 +12,6 @@
 *
 */
 
-#include "stdafx.h"
 #include <assert.h>
 #include <exception>
 #include <stdlib.h>
@@ -38,13 +37,51 @@ void ElevatorSequenceQueue::splitStringToArray(const std::string &s, char delime
 	}
 }
 
-void ElevatorSequenceQueue::findElementBetweenFloorsAndTime(ElevatorSequenceQueue & obj, int beginFloor, int endFloor, int time)
+void ElevatorSequenceQueue::findElementBetweenFloorsAndTime(ElevatorSequenceQueue & obj, int beginFloor, int endFloor,
+																int beginTime, int endTime)
 {
-	obj.Enqueue("x", 1);
-	obj.Enqueue("x", 1);
-	while (!isEmpty())
+	string currentCommand;
+	string helper[4] = {"", "", "", ""};
+	int currentFloor;
+	int currentTime;
+	Container* oldFront = front;
+
+	while (front->pNext)
 	{
-		
-		cout << Dequeue() << endl;
+		currentCommand = front->pNext->Value;
+		splitStringToArray(currentCommand, ' ', helper);
+		if (helper[3] != "")
+		{
+			assert(istringstream(helper[2]) >> currentFloor);
+			assert(istringstream(helper[3]) >> currentTime);
+		}
+		else
+		{
+			assert(istringstream(helper[1]) >> currentFloor);
+			assert(istringstream(helper[2]) >> currentTime);
+		}
+
+		if (currentFloor > beginFloor && currentFloor < endFloor
+			&& currentTime > beginTime && currentTime < endTime)
+		{
+			obj.Enqueue(front->pNext->Value, currentFloor);
+			front->pNext = front->pNext->pNext;
+			delete front->pNext;
+			--Used;
+		}
+		emptyStringArray(helper, 4);
+		front = front->pNext;
+	}
+	front = oldFront;
+	oldFront = NULL;
+	delete oldFront;
+	
+}
+
+void ElevatorSequenceQueue::emptyStringArray(string(&arr)[4], int length)
+{
+	for (int i = 0; i < length; i++)
+	{
+		arr[i] = "";
 	}
 }
