@@ -19,7 +19,7 @@
 #include <sstream>
 #include <assert.h>
 #include <stdlib.h>
-#include "PriorityQueue.h"
+#include "ElevatorSequenceQueue.h"
 
 using namespace std;
 
@@ -51,7 +51,9 @@ void splitStringToArray(const string &s, char delimeter, string (&elems)[4]) {
 
 int main(int argc, char* argv[])
 {
-	PriorityQueue<string> elevatorCourse;
+	ElevatorSequenceQueue elevatorCourse;
+
+
 	string directions[2] = { "up", "down" };
 
 	if (argc != 2)

@@ -29,7 +29,7 @@ public:
 	T Head() const;
 	bool isEmpty() const;
 	
-private:
+protected:
 	void Init();
 	void RemoveAll();
 	void CopyFrom(PriorityQueue<T> const& obj);
