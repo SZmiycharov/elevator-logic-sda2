@@ -28,6 +28,8 @@ public:
 	void findElementBetweenFloorsAndTime(ElevatorSequenceQueue & obj, int beginFloor, int endFloor,
 		int beginTime, int endTime);
 
+	bool DequeueElementsInFloorBeforeTime(int currentFloor, int currentTime);
+
 private:
 	void splitStringToArray(const std::string &s, char delimeter, std::string(&elems)[4]);
 	void emptyStringArray(std::string(&arr)[4], int length);

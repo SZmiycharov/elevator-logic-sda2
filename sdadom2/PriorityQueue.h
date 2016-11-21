@@ -28,6 +28,7 @@ public:
 	T Dequeue();
 	T Head() const;
 	bool isEmpty() const;
+	void Print();
 	
 protected:
 	void Init();
@@ -221,4 +222,20 @@ void PriorityQueue<T>::CopyFrom(PriorityQueue<T> const& obj)
 		cerr << "Exception caught: " << err.what() << '\n';
 		exit(EXIT_FAILURE);
 	}
+}
+
+template <typename T>
+void PriorityQueue<T>::Print()
+{
+	Container* oldFront = front;
+	while (front)
+	{
+		cout << front->Value << endl;
+
+		front = front->pNext;
+	}
+
+	front = oldFront;
+	oldFront = NULL;
+	delete oldFront;
 }

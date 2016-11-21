@@ -51,7 +51,6 @@ void splitStringToArray(const string &s, char delimeter, string (&elems)[4]) {
 int main(int argc, char* argv[])
 {
 	ElevatorSequenceQueue elevatorCourse;
-	ElevatorSequenceQueue test;
 
 	string directions[2] = { "up", "down" };
 	string directions2[2] = { "up", "down" };
@@ -70,7 +69,10 @@ int main(int argc, char* argv[])
 		string line;
 		string splittedCommand[] = {"", "", "", ""};
 		int priority;
-	
+
+		//first line in file is not actually needed
+		getline(fileCommands, line);
+		
 		while (getline(fileCommands, line))
 		{
 			splitStringToArray(line, ' ', splittedCommand);
@@ -95,116 +97,103 @@ int main(int argc, char* argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	string lastStop;
-	string currentStop;
-	int lastStopFloor = 0;
-	int currentStopFloor;
-	string currentCommandElements[] = { "", "", "", "" };
-	int timeTakenBetweenFloors = 0;
-	int delay = 0;
-	int currentStopTime;
-	int lastStopTime = 0;
+	elevatorCourse.Print();
+	cout << endl;
+	elevatorCourse.Print();
 
-	string lastStop2;
-	string currentStop2;
-	int lastStopFloor2 = 0;
-	int currentStopFloor2;
-	string currentCommandElements2[] = { "", "", "", "" };
-	int timeTakenBetweenFloors2 = 0;
-	int delay2 = 0;
-	int currentStopTime2;
-	int lastStopTime2 = 0;
-	int time;
+	system("pause");
+	return 0;
 
-	ElevatorSequenceQueue helperQueue = elevatorCourse;
+	int lastFloor = 1;
+	int currentTime = 0;
+	int destinationFloor;
+	string direction = "";
+	double currentFloor = 1;
+	string currentCommandArray[4];
+	string currentCommand = elevatorCourse.Dequeue();
+	
+	splitStringToArray(currentCommand, ' ', currentCommandArray);
 
-	while (!elevatorCourse.isEmpty())
+	if (currentCommandArray[0] == "call")
 	{
-		string currentStop = elevatorCourse.Head();
-		splitStringToArray(currentStop, ' ', currentCommandElements);
-
-		if (currentCommandElements[1] != directions[0] && currentCommandElements[1] != directions[1])
-		{
-			assert(istringstream(currentCommandElements[1]) >> currentStopFloor);
-			assert(istringstream(currentCommandElements[2]) >> currentStopTime);
-		}
-		else
-		{
-			assert(istringstream(currentCommandElements[2]) >> currentStopFloor);
-			assert(istringstream(currentCommandElements[3]) >> currentStopTime);
-		}
-
-		timeTakenBetweenFloors = findTameTakenBetweenFloors(lastStopFloor, currentStopFloor, currentStopTime-lastStopTime);
-
-		string currentOutput = to_string(timeTakenBetweenFloors) + " " + to_string(currentStopFloor);
-
-		if (currentStopFloor > lastStopFloor)
-		{
-			currentOutput += " ";
-			currentOutput += directions[0];
-		}
-		else
-		{
-			currentOutput += " ";
-			currentOutput += directions[1];
-		}
-
-		
-		currentStopTime = 5 * abs(lastStopFloor - currentStopFloor) + lastStopTime + currentStopTime;
-
-		//cout << "curfloor: " << currentStopFloor << " lastStopFloor: " << lastStopFloor <<
-			//" curstoptime: " << currentStopTime << " lastStopTime: " << lastStopTime << endl;
-
-		cout << "head: " << helperQueue.Head() << endl;
-		helperQueue.findElementBetweenFloorsAndTime(test, currentStopFloor, lastStopFloor, currentStopTime, lastStopTime);
-
-
-
-
-
-
-
-		while (!test.isEmpty())
-		{
-			string currentStop2 = test.Dequeue();
-			splitStringToArray(currentStop2, ' ', currentCommandElements2);
-
-			if (currentCommandElements[1] != directions2[0] && currentCommandElements2[1] != directions2[1])
-			{
-				assert(istringstream(currentCommandElements2[1]) >> currentStopFloor2);
-				assert(istringstream(currentCommandElements2[2]) >> currentStopTime2);
-			}
-			else
-			{
-				assert(istringstream(currentCommandElements2[2]) >> currentStopFloor2);
-				assert(istringstream(currentCommandElements2[3]) >> currentStopTime2);
-			}
-
-			timeTakenBetweenFloors = findTameTakenBetweenFloors(lastStopFloor2, currentStopFloor2, currentStopTime2 - lastStopTime2);
-
-			string currentOutput2 = to_string(timeTakenBetweenFloors2) + " " + to_string(currentStopFloor2);
-
-			if (currentStopFloor2 > lastStopFloor2)
-			{
-				currentOutput2 += " ";
-				currentOutput2 += directions2[0];
-			}
-			else
-			{
-				currentOutput2 += " ";
-				currentOutput2 += directions2[1];
-			}
-			cout << currentOutput2 << endl;
-		}
-
-		elevatorCourse.Dequeue();
-		//cout << currentOutput << endl;
-
-		lastStop = currentStop;
-		lastStopFloor = currentStopFloor;
-		lastStopTime = currentStopTime;
+		assert(istringstream(currentCommandArray[2]) >> destinationFloor);
+		direction = currentCommandArray[1];
+	}
+	else
+	{
+		assert(istringstream(currentCommandArray[1]) >> destinationFloor);
 	}
 
+	while (currentTime < 120)
+	{
+		if (direction == "up")
+		{
+			currentFloor += 0.2;
+		}
+		else if (direction == "down")
+		{
+			currentFloor -= 0.2;
+		}
+		else
+		{
+			if (currentFloor < destinationFloor)
+			{
+				currentFloor += 0.2;
+				direction = "up";
+			}
+			else
+			{
+				currentFloor -= 0.2;
+				direction = "down";
+			}
+		}
+		currentTime += 1;
+
+
+		// check if we are on some floor <like 1, 2, 3 and not 1.2 and 2.3>
+		if (fabs(currentFloor - round(currentFloor)) < 0.000001)
+		{
+			if (elevatorCourse.DequeueElementsInFloorBeforeTime(currentFloor, currentTime))
+			{
+				cout << currentTime << " " << currentFloor << " " << direction << endl;
+
+				//get next request
+				currentCommand = elevatorCourse.Dequeue();
+
+				splitStringToArray(currentCommand, ' ', currentCommandArray);
+
+				if (currentCommandArray[0] == "call")
+				{
+					assert(istringstream(currentCommandArray[2]) >> destinationFloor);
+					direction = currentCommandArray[1];
+				}
+				else
+				{
+					assert(istringstream(currentCommandArray[1]) >> destinationFloor);
+				}
+			}
+		}
+		
+
+		cout << "time: " << currentTime << "; floor: " << currentFloor << endl;
+		
+		
+
+
+
+			
+	}
+
+
+	//3-те опашки:
+	//
+
+
+
+
+
+
+	system("pause");
 	return 0;
 }
 

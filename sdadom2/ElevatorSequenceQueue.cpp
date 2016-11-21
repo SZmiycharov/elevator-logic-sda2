@@ -107,3 +107,62 @@ void ElevatorSequenceQueue::emptyStringArray(string(&arr)[4], int length)
 		arr[i] = "";
 	}
 }
+
+bool ElevatorSequenceQueue::DequeueElementsInFloorBeforeTime(int currentFloor, int currentTime)
+{
+	Container* tempFront = front;
+	Container* previous = front;
+	Container* oldTempFront = front;
+
+	bool foundElements = false;
+	int counter = 0;
+	int floor;
+	int time;
+	string spittedCommand[4];
+
+	while (tempFront->pNext)
+	{
+		splitStringToArray(front->Value, ' ', spittedCommand);
+		if (spittedCommand[0] == "call")
+		{
+			assert(istringstream(spittedCommand[2]) >> floor);
+			assert(istringstream(spittedCommand[3]) >> time);
+		}
+		else
+		{
+			assert(istringstream(spittedCommand[1]) >> floor);
+			assert(istringstream(spittedCommand[2]) >> time);
+		}
+		
+		if (floor == currentFloor && time <= currentTime)
+		{
+			foundElements = true;
+			if (front == tempFront)
+			{
+				front = front->pNext;
+				delete tempFront;
+				tempFront = front;
+			}
+			else
+			{
+				previous->pNext = tempFront->pNext;
+				oldTempFront = tempFront;
+				tempFront = tempFront->pNext;
+				delete oldTempFront;
+			}
+		}
+
+		previous = tempFront;
+		tempFront = tempFront->pNext;
+	}
+
+	tempFront = NULL;
+	delete tempFront;
+	previous = NULL;
+	delete previous;
+	oldTempFront = NULL;
+	delete oldTempFront;
+
+
+	return foundElements;
+}
