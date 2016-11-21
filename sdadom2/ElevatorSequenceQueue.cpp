@@ -48,7 +48,8 @@ void ElevatorSequenceQueue::findElementBetweenFloorsAndTime(ElevatorSequenceQueu
 
 	while (front->pNext)
 	{
-		currentCommand = front->pNext->Value;
+		currentCommand = front->Value;
+		cout << "current command here: " << currentCommand << endl;
 		splitStringToArray(currentCommand, ' ', helper);
 		if (helper[3] != "")
 		{
@@ -61,17 +62,38 @@ void ElevatorSequenceQueue::findElementBetweenFloorsAndTime(ElevatorSequenceQueu
 			assert(istringstream(helper[2]) >> currentTime);
 		}
 
-		if (currentFloor > beginFloor && currentFloor < endFloor
-			&& currentTime > beginTime && currentTime < endTime)
+		if (beginTime > endTime)
 		{
+			int helper = beginTime;
+			beginTime = endTime;
+			endTime = helper;
+		}
+		if (beginFloor > endFloor)
+		{
+			int helper = beginFloor;
+			beginFloor = endFloor;
+			endFloor = helper;
+		}
+
+		//cout << "curfloor: " << currentFloor << " beginFloor: " << beginFloor << " endfloor: " << endFloor << endl;
+		//cout << "curtime: " << currentTime << " beginTime: " << beginTime << "endtime: " << endTime << endl << endl;
+
+		if (currentFloor > beginFloor && currentFloor < endFloor
+			&& endTime > currentTime)
+		{
+			cout << "HEREE\n\n";
 			obj.Enqueue(front->pNext->Value, currentFloor);
-			front->pNext = front->pNext->pNext;
-			delete front->pNext;
+			cout << front->pNext->Value << endl;
+			//delete front->pNext;
+			//front->pNext = front->pNext->pNext;
 			--Used;
 		}
 		emptyStringArray(helper, 4);
 		front = front->pNext;
 	}
+
+	cout << "front: " <<front->Value << endl;
+	cout << "oldfront: " <<  oldFront->Value << endl;
 	front = oldFront;
 	oldFront = NULL;
 	delete oldFront;

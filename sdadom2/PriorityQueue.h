@@ -209,7 +209,7 @@ void PriorityQueue<T>::CopyFrom(PriorityQueue<T> const& obj)
 	{
 		Container* p = obj.front;
 
-		while (obj.front)
+		while (p)
 		{
 			Enqueue(p->Value);
 			p = p->pNext;
