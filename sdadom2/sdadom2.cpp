@@ -99,7 +99,12 @@ int main(int argc, char* argv[])
 
 	elevatorCourse.Print();
 	cout << endl;
+	
+	elevatorCourse.DequeueElementsInFloorBeforeTime(5, 300);
+
+	cout << endl;
 	elevatorCourse.Print();
+	
 
 	system("pause");
 	return 0;

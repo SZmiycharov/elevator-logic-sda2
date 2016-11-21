@@ -118,30 +118,35 @@ bool ElevatorSequenceQueue::DequeueElementsInFloorBeforeTime(int currentFloor, i
 	int counter = 0;
 	int floor;
 	int time;
-	string spittedCommand[4];
+	string splittedCommand[4];
+	bool movePointer = true;
 
-	while (tempFront->pNext)
+	while (tempFront)
 	{
-		splitStringToArray(front->Value, ' ', spittedCommand);
-		if (spittedCommand[0] == "call")
+		cout << "*********" << tempFront->Value << "*********" << endl;
+		splitStringToArray(tempFront->Value, ' ', splittedCommand);
+		if (splittedCommand[0] == "call")
 		{
-			assert(istringstream(spittedCommand[2]) >> floor);
-			assert(istringstream(spittedCommand[3]) >> time);
+			assert(istringstream(splittedCommand[2]) >> floor);
+			assert(istringstream(splittedCommand[3]) >> time);
 		}
 		else
 		{
-			assert(istringstream(spittedCommand[1]) >> floor);
-			assert(istringstream(spittedCommand[2]) >> time);
+			assert(istringstream(splittedCommand[1]) >> floor);
+			assert(istringstream(splittedCommand[2]) >> time);
 		}
+		cout << "floor: " << floor << " time: " << time << endl;
 		
 		if (floor == currentFloor && time <= currentTime)
 		{
+			cout << " aaaaaaaaaaaaaaaYEAH BABY";
 			foundElements = true;
 			if (front == tempFront)
 			{
 				front = front->pNext;
 				delete tempFront;
 				tempFront = front;
+				movePointer = false;
 			}
 			else
 			{
@@ -149,11 +154,17 @@ bool ElevatorSequenceQueue::DequeueElementsInFloorBeforeTime(int currentFloor, i
 				oldTempFront = tempFront;
 				tempFront = tempFront->pNext;
 				delete oldTempFront;
+				movePointer = false;
 			}
 		}
 
-		previous = tempFront;
-		tempFront = tempFront->pNext;
+		if (movePointer)
+		{
+			previous = tempFront;
+			tempFront = tempFront->pNext;
+		}
+
+		movePointer = true;
 	}
 
 	tempFront = NULL;
