@@ -97,22 +97,10 @@ int main(int argc, char* argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	elevatorCourse.Print();
-	cout << endl;
-	
-	elevatorCourse.DequeueElementsInFloorBeforeTime(5, 300);
-
-	cout << endl;
-	elevatorCourse.Print();
-	
-
-	system("pause");
-	return 0;
-
 	int lastFloor = 1;
 	int currentTime = 0;
 	int destinationFloor;
-	string direction = "";
+	string direction = "up";
 	double currentFloor = 1;
 	string currentCommandArray[4];
 	string currentCommand = elevatorCourse.Dequeue();
@@ -122,15 +110,54 @@ int main(int argc, char* argv[])
 	if (currentCommandArray[0] == "call")
 	{
 		assert(istringstream(currentCommandArray[2]) >> destinationFloor);
-		direction = currentCommandArray[1];
+		assert(istringstream(currentCommandArray[3]) >> currentTime);
 	}
 	else
 	{
 		assert(istringstream(currentCommandArray[1]) >> destinationFloor);
+		assert(istringstream(currentCommandArray[2]) >> currentTime);
 	}
+	cout << direction << endl << endl;
 
 	while (currentTime < 120)
 	{
+
+		cout << "time: " << currentTime << "s; floor: " << currentFloor << "; direction: " << direction << endl;
+
+		// check if we are on some floor <like 1, 2, 3 and not 1.2 and 2.3>
+		if (fabs(currentFloor - round(currentFloor)) < 0.000001)
+		{
+			if (elevatorCourse.DequeueElementsInFloorBeforeTime(currentFloor, currentTime))
+			{
+				cout << "*****************GETTING-PEOPLE: " << currentTime << " " << currentFloor << " " 
+					<< direction << "*****************" << endl;
+
+				//get next request
+				currentCommand = elevatorCourse.Dequeue();
+				cout << "currentcommand: " << currentCommand << endl;
+
+				splitStringToArray(currentCommand, ' ', currentCommandArray);
+
+				if (currentCommandArray[0] == "call")
+				{
+					assert(istringstream(currentCommandArray[2]) >> destinationFloor);
+				}
+				else
+				{
+					assert(istringstream(currentCommandArray[1]) >> destinationFloor);
+				}
+
+				if (destinationFloor > currentFloor)
+				{
+					direction = "up";
+				}
+				else
+				{
+					direction = "down";
+				}
+			}
+		}
+		
 		if (direction == "up")
 		{
 			currentFloor += 0.2;
@@ -139,64 +166,10 @@ int main(int argc, char* argv[])
 		{
 			currentFloor -= 0.2;
 		}
-		else
-		{
-			if (currentFloor < destinationFloor)
-			{
-				currentFloor += 0.2;
-				direction = "up";
-			}
-			else
-			{
-				currentFloor -= 0.2;
-				direction = "down";
-			}
-		}
+		
 		currentTime += 1;
-
-
-		// check if we are on some floor <like 1, 2, 3 and not 1.2 and 2.3>
-		if (fabs(currentFloor - round(currentFloor)) < 0.000001)
-		{
-			if (elevatorCourse.DequeueElementsInFloorBeforeTime(currentFloor, currentTime))
-			{
-				cout << currentTime << " " << currentFloor << " " << direction << endl;
-
-				//get next request
-				currentCommand = elevatorCourse.Dequeue();
-
-				splitStringToArray(currentCommand, ' ', currentCommandArray);
-
-				if (currentCommandArray[0] == "call")
-				{
-					assert(istringstream(currentCommandArray[2]) >> destinationFloor);
-					direction = currentCommandArray[1];
-				}
-				else
-				{
-					assert(istringstream(currentCommandArray[1]) >> destinationFloor);
-				}
-			}
-		}
-		
-
-		cout << "time: " << currentTime << "; floor: " << currentFloor << endl;
-		
-		
-
-
-
-			
+				
 	}
-
-
-	//3-те опашки:
-	//
-
-
-
-
-
 
 	system("pause");
 	return 0;

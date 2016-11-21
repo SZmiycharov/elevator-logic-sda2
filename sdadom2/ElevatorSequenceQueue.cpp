@@ -123,7 +123,6 @@ bool ElevatorSequenceQueue::DequeueElementsInFloorBeforeTime(int currentFloor, i
 
 	while (tempFront)
 	{
-		cout << "*********" << tempFront->Value << "*********" << endl;
 		splitStringToArray(tempFront->Value, ' ', splittedCommand);
 		if (splittedCommand[0] == "call")
 		{
@@ -135,11 +134,9 @@ bool ElevatorSequenceQueue::DequeueElementsInFloorBeforeTime(int currentFloor, i
 			assert(istringstream(splittedCommand[1]) >> floor);
 			assert(istringstream(splittedCommand[2]) >> time);
 		}
-		cout << "floor: " << floor << " time: " << time << endl;
 		
 		if (floor == currentFloor && time <= currentTime)
 		{
-			cout << " aaaaaaaaaaaaaaaYEAH BABY";
 			foundElements = true;
 			if (front == tempFront)
 			{
@@ -173,7 +170,6 @@ bool ElevatorSequenceQueue::DequeueElementsInFloorBeforeTime(int currentFloor, i
 	delete previous;
 	oldTempFront = NULL;
 	delete oldTempFront;
-
 
 	return foundElements;
 }
