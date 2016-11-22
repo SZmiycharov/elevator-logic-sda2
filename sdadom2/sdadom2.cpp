@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
 	int lastFloor = 1;
 	int currentTime = 0;
 	int destinationFloor;
-	string direction = "up";
+	string direction;
 	double currentFloor = 1;
 	string currentCommandArray[4];
 	string currentCommand = elevatorCourse.Head();
@@ -130,42 +130,53 @@ int main(int argc, char* argv[])
 	{
 		assert(istringstream(currentCommandArray[2]) >> destinationFloor);
 		assert(istringstream(currentCommandArray[3]) >> currentTime);
+		if (destinationFloor > currentFloor)
+		{
+			direction = "up";
+		}
+		else
+		{
+			direction = "down";
+		}
 	}
 	else
 	{
 		assert(istringstream(currentCommandArray[1]) >> destinationFloor);
 		assert(istringstream(currentCommandArray[2]) >> currentTime);
+		direction = "";
 	}
 
-	elevatorCourse.Print();
-	cout << "\n";
+	//elevatorCourse.Print();
+	//cout << "\n";
 
 	while (true)
 	{
 
-		cout << "time: " << currentTime << "s; floor: " << currentFloor << "; direction: " << direction << endl;
+		//cout << "time: " << currentTime << "s; floor: " << currentFloor << "; direction: " << direction << endl;
 
 		// check if we are on some floor <like 1, 2, 3 and not 1.2 and 2.3>
 		if (fabs(currentFloor - round(currentFloor)) < 0.000000001)
 		{
 			if (elevatorCourse.DequeueElementsInFloorBeforeTime((int)(currentFloor+0.5), currentTime))
 			{
-				cout << "curfloor: " << currentFloor << " curtime: " << currentTime << endl;
+				if (direction == "")
+				{
+					direction = "down";
+				}
+				//cout << "curfloor: " << currentFloor << " curtime: " << currentTime << endl;
 				cout << "*****************GETTING-PEOPLE: " << currentTime << " " << currentFloor << " " 
 					<< direction << "*****************" << endl;
-				elevatorCourse.Print();
-				cout << "\n";
-				cout << "HEREHRHEHHRE\n\n";
-				cout << elevatorCourse.isEmpty() << endl;
+				//elevatorCourse.Print();
+				//cout << "\n";
+
 				if (elevatorCourse.isEmpty())
 				{
-					cout << "BREAKING!!\n\n";
 					break;
 				}
-				cout << "hereee\n";
 
 				//get next request
 				currentCommand = elevatorCourse.Head();
+				
 				cout << "currentcommand: " << currentCommand << "\n\n";
 
 				splitStringToArray(currentCommand, ' ', currentCommandArray);
@@ -183,9 +194,13 @@ int main(int argc, char* argv[])
 				{
 					direction = "up";
 				}
-				else
+				else if (destinationFloor < currentFloor)
 				{
 					direction = "down";
+				}
+				else if (destinationFloor == currentFloor)
+				{
+					direction = "";
 				}
 			}
 		}

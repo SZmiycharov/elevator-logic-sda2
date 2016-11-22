@@ -110,7 +110,7 @@ void ElevatorSequenceQueue::emptyStringArray(string(&arr)[4], int length)
 
 bool ElevatorSequenceQueue::DequeueElementsInFloorBeforeTime(int currentFloor, int currentTime)
 {
-	cout << "floor: " << floor << "outsidefloor: " << currentFloor << endl;
+	//cout << "floor: " << floor << "outsidefloor: " << currentFloor << endl;
 	Container* tempFront = front;
 	Container* previous = front;
 	Container* oldTempFront = front;
