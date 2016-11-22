@@ -180,8 +180,8 @@ T PriorityQueue<T>::Head() const
 
 template <typename T>
 bool PriorityQueue<T>::isEmpty() const
-{
-	return back == NULL;
+{	
+	return front == NULL;
 }
 
 template <typename T>
@@ -227,6 +227,11 @@ void PriorityQueue<T>::CopyFrom(PriorityQueue<T> const& obj)
 template <typename T>
 void PriorityQueue<T>::Print()
 {
+	if (front == NULL)
+	{
+		return;
+	}
+
 	Container* oldFront = front;
 	while (front)
 	{

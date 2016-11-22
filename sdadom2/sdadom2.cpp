@@ -52,9 +52,6 @@ int main(int argc, char* argv[])
 {
 	ElevatorSequenceQueue elevatorCourse;
 
-	string directions[2] = { "up", "down" };
-	string directions2[2] = { "up", "down" };
-
 	if (argc != 2)
 	{
 		cerr << "Usage: " << argv[0] << " <FILENAME>" << "\n";
@@ -97,13 +94,35 @@ int main(int argc, char* argv[])
 		exit(EXIT_FAILURE);
 	}
 
+	/*cout << endl;
+	elevatorCourse.Print();
+	elevatorCourse.DequeueElementsInFloorBeforeTime(4,16);
+
+	cout << endl;
+	elevatorCourse.Print();
+	elevatorCourse.DequeueElementsInFloorBeforeTime(5, 21);
+	
+	cout << endl;
+	elevatorCourse.Print();
+	elevatorCourse.DequeueElementsInFloorBeforeTime(2, 36);
+	
+
+	cout << endl;
+	elevatorCourse.Print();
+	elevatorCourse.DequeueElementsInFloorBeforeTime(8, 66);
+	
+	system("pause");
+	return 0;*/
+
+
+
 	int lastFloor = 1;
 	int currentTime = 0;
 	int destinationFloor;
 	string direction = "up";
 	double currentFloor = 1;
 	string currentCommandArray[4];
-	string currentCommand = elevatorCourse.Dequeue();
+	string currentCommand = elevatorCourse.Head();
 	
 	splitStringToArray(currentCommand, ' ', currentCommandArray);
 
@@ -117,24 +136,37 @@ int main(int argc, char* argv[])
 		assert(istringstream(currentCommandArray[1]) >> destinationFloor);
 		assert(istringstream(currentCommandArray[2]) >> currentTime);
 	}
-	cout << direction << endl << endl;
 
-	while (currentTime < 120)
+	elevatorCourse.Print();
+	cout << "\n";
+
+	while (true)
 	{
 
 		cout << "time: " << currentTime << "s; floor: " << currentFloor << "; direction: " << direction << endl;
 
 		// check if we are on some floor <like 1, 2, 3 and not 1.2 and 2.3>
-		if (fabs(currentFloor - round(currentFloor)) < 0.000001)
+		if (fabs(currentFloor - round(currentFloor)) < 0.000000001)
 		{
-			if (elevatorCourse.DequeueElementsInFloorBeforeTime(currentFloor, currentTime))
+			if (elevatorCourse.DequeueElementsInFloorBeforeTime((int)(currentFloor+0.5), currentTime))
 			{
+				cout << "curfloor: " << currentFloor << " curtime: " << currentTime << endl;
 				cout << "*****************GETTING-PEOPLE: " << currentTime << " " << currentFloor << " " 
 					<< direction << "*****************" << endl;
+				elevatorCourse.Print();
+				cout << "\n";
+				cout << "HEREHRHEHHRE\n\n";
+				cout << elevatorCourse.isEmpty() << endl;
+				if (elevatorCourse.isEmpty())
+				{
+					cout << "BREAKING!!\n\n";
+					break;
+				}
+				cout << "hereee\n";
 
 				//get next request
-				currentCommand = elevatorCourse.Dequeue();
-				cout << "currentcommand: " << currentCommand << endl;
+				currentCommand = elevatorCourse.Head();
+				cout << "currentcommand: " << currentCommand << "\n\n";
 
 				splitStringToArray(currentCommand, ' ', currentCommandArray);
 
