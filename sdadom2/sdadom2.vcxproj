@@ -79,12 +79,12 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ElevatorSequenceQueue.h" />
+    <ClInclude Include="ElevatorCommandsSequence.h" />
     <ClInclude Include="PriorityQueue.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ElevatorSequenceQueue.cpp" />
+    <ClCompile Include="ElevatorCommandsSequence.cpp" />
     <ClCompile Include="sdadom2.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

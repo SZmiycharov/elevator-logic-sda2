@@ -19,11 +19,11 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "ElevatorSequenceQueue.h"
+#include "ElevatorCommandsSequence.h"
 
 using namespace std;
 
-void ElevatorSequenceQueue::splitStringToArray(const std::string &s, char delimeter, std::string(&elems)[4])
+void ElevatorCommandsSequence::splitStringToArray(const std::string &s, char delimeter, std::string(&elems)[4])
 {
 	std::stringstream ss;
 	ss.str(s);
@@ -37,7 +37,7 @@ void ElevatorSequenceQueue::splitStringToArray(const std::string &s, char delime
 	}
 }
 
-void ElevatorSequenceQueue::findElementBetweenFloorsAndTime(ElevatorSequenceQueue & obj, int beginFloor, int endFloor,
+void ElevatorCommandsSequence::findElementBetweenFloorsAndTime(ElevatorCommandsSequence & obj, int beginFloor, int endFloor,
 																int beginTime, int endTime)
 {
 	string currentCommand;
@@ -49,7 +49,6 @@ void ElevatorSequenceQueue::findElementBetweenFloorsAndTime(ElevatorSequenceQueu
 	while (front->pNext)
 	{
 		currentCommand = front->Value;
-		cout << "current command here: " << currentCommand << endl;
 		splitStringToArray(currentCommand, ' ', helper);
 		if (helper[3] != "")
 		{
@@ -75,32 +74,24 @@ void ElevatorSequenceQueue::findElementBetweenFloorsAndTime(ElevatorSequenceQueu
 			endFloor = helper;
 		}
 
-		//cout << "curfloor: " << currentFloor << " beginFloor: " << beginFloor << " endfloor: " << endFloor << endl;
-		//cout << "curtime: " << currentTime << " beginTime: " << beginTime << "endtime: " << endTime << endl << endl;
-
 		if (currentFloor > beginFloor && currentFloor < endFloor
 			&& endTime > currentTime)
 		{
-			cout << "HEREE\n\n";
 			obj.Enqueue(front->pNext->Value, currentFloor);
 			cout << front->pNext->Value << endl;
-			//delete front->pNext;
-			//front->pNext = front->pNext->pNext;
 			--Used;
 		}
 		emptyStringArray(helper, 4);
 		front = front->pNext;
 	}
 
-	cout << "front: " <<front->Value << endl;
-	cout << "oldfront: " <<  oldFront->Value << endl;
 	front = oldFront;
 	oldFront = NULL;
 	delete oldFront;
 	
 }
 
-void ElevatorSequenceQueue::emptyStringArray(string(&arr)[4], int length)
+void ElevatorCommandsSequence::emptyStringArray(string(&arr)[4], int length)
 {
 	for (int i = 0; i < length; i++)
 	{
@@ -108,9 +99,8 @@ void ElevatorSequenceQueue::emptyStringArray(string(&arr)[4], int length)
 	}
 }
 
-bool ElevatorSequenceQueue::DequeueElementsInFloorBeforeTime(int currentFloor, int currentTime)
+bool ElevatorCommandsSequence::DequeueElementsInFloorBeforeTime(int currentFloor, int currentTime)
 {
-	//cout << "floor: " << floor << "outsidefloor: " << currentFloor << endl;
 	Container* tempFront = front;
 	Container* previous = front;
 	Container* oldTempFront = front;
@@ -172,8 +162,6 @@ bool ElevatorSequenceQueue::DequeueElementsInFloorBeforeTime(int currentFloor, i
 	delete previous;
 	oldTempFront = NULL;
 	delete oldTempFront;
-
-
 
 	return foundElements;
 }

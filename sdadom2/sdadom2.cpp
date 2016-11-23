@@ -18,14 +18,9 @@
 #include <sstream>
 #include <assert.h>
 #include <stdlib.h>
-#include "ElevatorSequenceQueue.h"
+#include "ElevatorCommandsSequence.h"
 
 using namespace std;
-
-int findTameTakenBetweenFloors(int lastFloor, int currentFloor, int delay)
-{
-	return(abs(currentFloor - lastFloor)*5 + delay);
-}
 
 void emptyStringArray(string(&arr)[4], int length)
 {
@@ -48,28 +43,21 @@ void splitStringToArray(const string &s, char delimeter, string (&elems)[4]) {
 	}
 }
 
-int main(int argc, char* argv[])
+ElevatorCommandsSequence fillPriorityQueueFromFile(string fileName)
 {
-	ElevatorSequenceQueue elevatorCourse;
+	ElevatorCommandsSequence elevatorCourse;
 
-	if (argc != 2)
-	{
-		cerr << "Usage: " << argv[0] << " <FILENAME>" << "\n";
-		system("pause");
-		exit(EXIT_FAILURE);
-	}
-
-	ifstream fileCommands(argv[1]);
+	ifstream fileCommands(fileName);
 
 	if (fileCommands.is_open())
 	{
-		string line;
-		string splittedCommand[] = {"", "", "", ""};
 		int priority;
+		string line;
+		string splittedCommand[] = { "", "", "", "" };
 
-		//first line in file is not actually needed
+		//first line in file is not needed, as our data structure is dynamic
 		getline(fileCommands, line);
-		
+
 		while (getline(fileCommands, line))
 		{
 			splitStringToArray(line, ' ', splittedCommand);
@@ -87,88 +75,102 @@ int main(int argc, char* argv[])
 		}
 
 		fileCommands.close();
+		return elevatorCourse;
 	}
 	else
 	{
-		cerr << "Unable to open file " << argv[1] << "\n";
+		cerr << "Unable to open file " << fileName << "\n";
 		exit(EXIT_FAILURE);
 	}
+}
 
-	/*cout << endl;
-	elevatorCourse.Print();
-	elevatorCourse.DequeueElementsInFloorBeforeTime(4,16);
-
-	cout << endl;
-	elevatorCourse.Print();
-	elevatorCourse.DequeueElementsInFloorBeforeTime(5, 21);
-	
-	cout << endl;
-	elevatorCourse.Print();
-	elevatorCourse.DequeueElementsInFloorBeforeTime(2, 36);
-	
-
-	cout << endl;
-	elevatorCourse.Print();
-	elevatorCourse.DequeueElementsInFloorBeforeTime(8, 66);
-	
-	system("pause");
-	return 0;*/
-
-
-
-	int lastFloor = 1;
-	int currentTime = 0;
-	int destinationFloor;
-	string direction;
-	double currentFloor = 1;
-	string currentCommandArray[4];
-	string currentCommand = elevatorCourse.Head();
-	
-	splitStringToArray(currentCommand, ' ', currentCommandArray);
-
+void configureNextTask(string currentCommandArray[4], int &destinationFloor, int &currentTime,
+	double currentFloor, string &direction, string &previousDirection)
+{
 	if (currentCommandArray[0] == "call")
 	{
 		assert(istringstream(currentCommandArray[2]) >> destinationFloor);
 		assert(istringstream(currentCommandArray[3]) >> currentTime);
-		if (destinationFloor > currentFloor)
-		{
-			direction = "up";
-		}
-		else
-		{
-			direction = "down";
-		}
 	}
 	else
 	{
 		assert(istringstream(currentCommandArray[1]) >> destinationFloor);
 		assert(istringstream(currentCommandArray[2]) >> currentTime);
-		direction = "";
 	}
 
-	//elevatorCourse.Print();
-	//cout << "\n";
+	if (destinationFloor > currentFloor)
+	{
+		direction = "up";
+	}
+	else if (destinationFloor < currentFloor)
+	{
+		direction = "down";
+	}
+	else
+	{
+		direction = previousDirection;
+	}
+
+	if (direction != "")
+	{
+		previousDirection = direction;
+	}
+}
+
+void printOutput(int currentTime, double currentFloor, string direction)
+{
+	cout << currentTime << " " << currentFloor << " " << direction << endl;
+}
+
+void changeFloor(string direction, double &currentFloor)
+{
+	if (direction == "up")
+	{
+		currentFloor += 0.2;
+	}
+	else if (direction == "down")
+	{
+		currentFloor -= 0.2;
+	}
+}
+
+int main(int argc, char* argv[])
+{
+	if (argc != 2)
+	{
+		cerr << "Usage: " << argv[0] << " <FILENAME>" << "\n";
+		system("pause");
+		exit(EXIT_FAILURE);
+	}
+
+	//ElevatorCommandsSequence is inherited from a priority queue
+	//as i wanted to make sure i get commands ordered by their time
+	ElevatorCommandsSequence elevatorCourse = fillPriorityQueueFromFile(argv[1]);
+
+	int lastFloor = 1;
+	int currentTime = 0;
+	int commandTime = 0;
+	int destinationFloor;
+	double currentFloor = 1;
+	string direction;
+	//default direction should be down, e.g call
+	string previousDirection = "down";
+	string currentCommandArray[4];
+	string currentCommand = elevatorCourse.Head();
+	
+	splitStringToArray(currentCommand, ' ', currentCommandArray);
+	configureNextTask(currentCommandArray, destinationFloor, currentTime, currentFloor, direction, previousDirection);
 
 	while (true)
 	{
-
-		//cout << "time: " << currentTime << "s; floor: " << currentFloor << "; direction: " << direction << endl;
-
-		// check if we are on some floor <like 1, 2, 3 and not 1.2 and 2.3>
 		if (fabs(currentFloor - round(currentFloor)) < 0.000000001)
 		{
+			//if we can take people from current floor, take them and get rid of their requests
 			if (elevatorCourse.DequeueElementsInFloorBeforeTime((int)(currentFloor+0.5), currentTime))
-			{
-				if (direction == "")
-				{
-					direction = "down";
-				}
-				//cout << "curfloor: " << currentFloor << " curtime: " << currentTime << endl;
-				cout << "*****************GETTING-PEOPLE: " << currentTime << " " << currentFloor << " " 
-					<< direction << "*****************" << endl;
-				//elevatorCourse.Print();
-				//cout << "\n";
+			{				
+				printOutput(currentTime, currentFloor, direction);
 
+				//end when we don't have any more requests
 				if (elevatorCourse.isEmpty())
 				{
 					break;
@@ -176,46 +178,16 @@ int main(int argc, char* argv[])
 
 				//get next request
 				currentCommand = elevatorCourse.Head();
-				
-				cout << "currentcommand: " << currentCommand << "\n\n";
-
+			
 				splitStringToArray(currentCommand, ' ', currentCommandArray);
 
-				if (currentCommandArray[0] == "call")
-				{
-					assert(istringstream(currentCommandArray[2]) >> destinationFloor);
-				}
-				else
-				{
-					assert(istringstream(currentCommandArray[1]) >> destinationFloor);
-				}
-
-				if (destinationFloor > currentFloor)
-				{
-					direction = "up";
-				}
-				else if (destinationFloor < currentFloor)
-				{
-					direction = "down";
-				}
-				else if (destinationFloor == currentFloor)
-				{
-					direction = "";
-				}
+				configureNextTask(currentCommandArray, destinationFloor, commandTime,
+					currentFloor, direction, previousDirection);
 			}
 		}
-		
-		if (direction == "up")
-		{
-			currentFloor += 0.2;
-		}
-		else if (direction == "down")
-		{
-			currentFloor -= 0.2;
-		}
+		changeFloor(direction, currentFloor);
 		
 		currentTime += 1;
-				
 	}
 
 	system("pause");

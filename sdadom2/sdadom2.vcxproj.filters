@@ -24,7 +24,7 @@
     <ClInclude Include="PriorityQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ElevatorSequenceQueue.h">
+    <ClInclude Include="ElevatorCommandsSequence.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -35,7 +35,7 @@
     <ClCompile Include="sdadom2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ElevatorSequenceQueue.cpp">
+    <ClCompile Include="ElevatorCommandsSequence.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

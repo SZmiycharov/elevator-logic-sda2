@@ -21,11 +21,11 @@
 #include <sstream>
 #include "PriorityQueue.h"
 
-class ElevatorSequenceQueue : public PriorityQueue<std::string>
+class ElevatorCommandsSequence : public PriorityQueue<std::string>
 {
 public:
-	ElevatorSequenceQueue() : PriorityQueue() { }
-	void findElementBetweenFloorsAndTime(ElevatorSequenceQueue & obj, int beginFloor, int endFloor,
+	ElevatorCommandsSequence() : PriorityQueue() { }
+	void findElementBetweenFloorsAndTime(ElevatorCommandsSequence & obj, int beginFloor, int endFloor,
 		int beginTime, int endTime);
 
 	bool DequeueElementsInFloorBeforeTime(int currentFloor, int currentTime);

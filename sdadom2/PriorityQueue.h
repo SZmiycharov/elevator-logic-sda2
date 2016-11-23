@@ -16,6 +16,8 @@
 #include <exception>
 #include <stdlib.h>
 
+//dynamic queue ordered by priority
+//ordering happens on enqueue
 template <typename T>
 class PriorityQueue {
 public:
