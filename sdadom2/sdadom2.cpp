@@ -30,7 +30,7 @@ void emptyStringArray(string(&arr)[4], int length)
 	}
 }
 
-void splitStringToArray(const string &s, char delimeter, string (&elems)[4]) {
+void splitStringToArray(const string &s, char delimeter, string(&elems)[4]) {
 	stringstream ss;
 	ss.str(s);
 	string item;
@@ -40,6 +40,23 @@ void splitStringToArray(const string &s, char delimeter, string (&elems)[4]) {
 	while (getline(ss, item, delimeter)) {
 		elems[i] = item;
 		i++;
+	}
+}
+
+void printOutput(int currentTime, double currentFloor, string direction)
+{
+	cout << currentTime << " " << currentFloor << " " << direction << endl;
+}
+
+void changeFloor(string direction, double &currentFloor)
+{
+	if (direction == "up")
+	{
+		currentFloor += 0.2;
+	}
+	else if (direction == "down")
+	{
+		currentFloor -= 0.2;
 	}
 }
 
@@ -106,31 +123,14 @@ void configureNextTask(string currentCommandArray[4], int &destinationFloor, int
 	{
 		direction = "down";
 	}
-	else
+	else if (destinationFloor == currentFloor)
 	{
-		direction = previousDirection;
+		direction = "";
 	}
 
 	if (direction != "")
 	{
 		previousDirection = direction;
-	}
-}
-
-void printOutput(int currentTime, double currentFloor, string direction)
-{
-	cout << currentTime << " " << currentFloor << " " << direction << endl;
-}
-
-void changeFloor(string direction, double &currentFloor)
-{
-	if (direction == "up")
-	{
-		currentFloor += 0.2;
-	}
-	else if (direction == "down")
-	{
-		currentFloor -= 0.2;
 	}
 }
 
@@ -153,10 +153,10 @@ int main(int argc, char* argv[])
 	int destinationFloor;
 	double currentFloor = 1;
 	string direction;
-	//default direction should be down, e.g call
-	string previousDirection = "down";
 	string currentCommandArray[4];
 	string currentCommand = elevatorCourse.Head();
+	//default direction should be down, e.g call
+	string previousDirection = "down";
 	
 	splitStringToArray(currentCommand, ' ', currentCommandArray);
 	configureNextTask(currentCommandArray, destinationFloor, currentTime, currentFloor, direction, previousDirection);
@@ -166,8 +166,13 @@ int main(int argc, char* argv[])
 		if (fabs(currentFloor - round(currentFloor)) < 0.000000001)
 		{
 			//if we can take people from current floor, take them and get rid of their requests
-			if (elevatorCourse.DequeueElementsInFloorBeforeTime((int)(currentFloor+0.5), currentTime))
-			{				
+			if (elevatorCourse.DequeueElementsInFloorBeforeTime((int)(currentFloor + 0.5), currentTime))
+			{
+				if (direction == "")
+				{
+					direction = previousDirection;
+				}
+
 				printOutput(currentTime, currentFloor, direction);
 
 				//end when we don't have any more requests
@@ -178,19 +183,16 @@ int main(int argc, char* argv[])
 
 				//get next request
 				currentCommand = elevatorCourse.Head();
-			
-				splitStringToArray(currentCommand, ' ', currentCommandArray);
 
-				configureNextTask(currentCommandArray, destinationFloor, commandTime,
-					currentFloor, direction, previousDirection);
+				splitStringToArray(currentCommand, ' ', currentCommandArray);
+				configureNextTask(currentCommandArray, destinationFloor, commandTime, currentFloor, direction, previousDirection);
 			}
 		}
+
 		changeFloor(direction, currentFloor);
-		
 		currentTime += 1;
 	}
 
 	system("pause");
 	return 0;
 }
-

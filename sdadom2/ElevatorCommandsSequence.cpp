@@ -78,7 +78,6 @@ void ElevatorCommandsSequence::findElementBetweenFloorsAndTime(ElevatorCommandsS
 			&& endTime > currentTime)
 		{
 			obj.Enqueue(front->pNext->Value, currentFloor);
-			cout << front->pNext->Value << endl;
 			--Used;
 		}
 		emptyStringArray(helper, 4);
