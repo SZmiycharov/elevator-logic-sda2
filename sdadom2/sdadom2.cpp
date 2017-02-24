@@ -143,7 +143,7 @@ int main(int argc, char* argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	//ElevatorCommandsSequence is inherited from a priority queue
+	//ElevatorCommandsSequence inherits from a priority queue
 	//as i wanted to make sure i get commands ordered by their time
 	ElevatorCommandsSequence elevatorCourse = fillPriorityQueueFromFile(argv[1]);
 
@@ -157,7 +157,7 @@ int main(int argc, char* argv[])
 	string currentCommand = elevatorCourse.Head();
 	//default direction should be down, e.g call
 	string previousDirection = "down";
-	
+
 	splitStringToArray(currentCommand, ' ', currentCommandArray);
 	configureNextTask(currentCommandArray, destinationFloor, currentTime, currentFloor, direction, previousDirection);
 
@@ -186,6 +186,11 @@ int main(int argc, char* argv[])
 
 				splitStringToArray(currentCommand, ' ', currentCommandArray);
 				configureNextTask(currentCommandArray, destinationFloor, commandTime, currentFloor, direction, previousDirection);
+
+				if (commandTime > currentTime)
+				{
+					currentTime = commandTime - 1;
+				}
 			}
 		}
 
